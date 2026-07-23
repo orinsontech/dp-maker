@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 // frame-image.png is 1254x1254. The circular opening in the frame is centered
 // at (626.5, 448.5) with radius 367.5 (measured directly from the source file).
@@ -8,7 +8,7 @@ const FRAME_SIZE = 1254;
 const CIRCLE = { cx: 626.5, cy: 448.5, r: 367.5 };
 
 export default function FrameMaker() {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [photo, setPhoto] = useState<HTMLImageElement | null>(null);
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -35,12 +35,12 @@ export default function FrameMaker() {
   // circle geometry.
   useEffect(() => {
     const img = new Image();
-    img.src = "/frame-image.png";
+    img.src = '/frame-image.png';
     img.onload = () => {
-      const off = document.createElement("canvas");
+      const off = document.createElement('canvas');
       off.width = FRAME_SIZE;
       off.height = FRAME_SIZE;
-      const octx = off.getContext("2d");
+      const octx = off.getContext('2d');
       if (!octx) return;
       octx.drawImage(img, 0, 0, FRAME_SIZE, FRAME_SIZE);
 
@@ -107,7 +107,10 @@ export default function FrameMaker() {
   }, []);
 
   const baseScale = photo
-    ? Math.max((CIRCLE.r * 2) / photo.naturalWidth, (CIRCLE.r * 2) / photo.naturalHeight)
+    ? Math.max(
+        (CIRCLE.r * 2) / photo.naturalWidth,
+        (CIRCLE.r * 2) / photo.naturalHeight,
+      )
     : 1;
 
   function clampOffset(x: number, y: number, currentZoom: number) {
@@ -125,7 +128,7 @@ export default function FrameMaker() {
   function draw() {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     ctx.clearRect(0, 0, FRAME_SIZE, FRAME_SIZE);
@@ -142,14 +145,14 @@ export default function FrameMaker() {
         CIRCLE.cx - drawW / 2 + offset.x,
         CIRCLE.cy - drawH / 2 + offset.y,
         drawW,
-        drawH
+        drawH,
       );
       ctx.restore();
     } else {
       ctx.save();
       ctx.beginPath();
       ctx.arc(CIRCLE.cx, CIRCLE.cy, CIRCLE.r, 0, Math.PI * 2);
-      ctx.fillStyle = "#1b2547";
+      ctx.fillStyle = '#1b2547';
       ctx.fill();
       ctx.restore();
     }
@@ -182,7 +185,10 @@ export default function FrameMaker() {
     if (!canvas) return { x: 0, y: 0 };
     const rect = canvas.getBoundingClientRect();
     const scale = FRAME_SIZE / rect.width;
-    return { x: (clientX - rect.left) * scale, y: (clientY - rect.top) * scale };
+    return {
+      x: (clientX - rect.left) * scale,
+      y: (clientY - rect.top) * scale,
+    };
   }
 
   function onPointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
@@ -205,7 +211,7 @@ export default function FrameMaker() {
     const next = clampOffset(
       dragState.current.startOffset.x + dx,
       dragState.current.startOffset.y + dy,
-      zoom
+      zoom,
     );
     setOffset(next);
   }
@@ -225,18 +231,18 @@ export default function FrameMaker() {
 
     // The canvas has transparent corners outside the frame ring; flatten
     // onto a white background so the downloaded file has no transparency.
-    const out = document.createElement("canvas");
+    const out = document.createElement('canvas');
     out.width = FRAME_SIZE;
     out.height = FRAME_SIZE;
-    const octx = out.getContext("2d");
+    const octx = out.getContext('2d');
     if (!octx) return;
-    octx.fillStyle = "#ffffff";
+    octx.fillStyle = '#ffffff';
     octx.fillRect(0, 0, FRAME_SIZE, FRAME_SIZE);
     octx.drawImage(canvas, 0, 0);
 
-    const link = document.createElement("a");
-    link.download = "maha-kumbh-dp.png";
-    link.href = out.toDataURL("image/png");
+    const link = document.createElement('a');
+    link.download = 'maha-kumbh-dp.png';
+    link.href = out.toDataURL('image/png');
     link.click();
   }
 
@@ -247,7 +253,7 @@ export default function FrameMaker() {
           Pagariya JBN
         </p>
         <h1 className="mt-1 font-serif text-4xl sm:text-5xl font-black tracking-tight bg-gradient-to-b from-amber-200 via-yellow-400 to-amber-600 bg-clip-text text-transparent drop-shadow-[0_2px_16px_rgba(217,164,65,0.35)]">
-          Maha Kumbh
+          Mahakumbh
         </h1>
         <div className="mt-2.5 flex items-center justify-center gap-3 text-xs font-semibold tracking-[0.35em] text-amber-300/70 uppercase">
           <span className="h-px w-8 bg-gradient-to-r from-transparent to-amber-400/50" />
@@ -259,7 +265,8 @@ export default function FrameMaker() {
       <div className="rounded-3xl border border-amber-400/25 bg-gradient-to-b from-[#0d1836] to-[#0a1230] shadow-2xl shadow-black/50 p-6 sm:p-8 lg:p-10 flex flex-col lg:flex-row items-center lg:items-start gap-7 lg:gap-12">
         <div className="flex flex-col items-center gap-5 lg:flex-1">
           <p className="text-sm text-slate-300/80 text-center lg:hidden">
-            Upload your photo, adjust it inside the circle, and download your Maha Kumbh DP.
+            Upload your photo, adjust it inside the circle, and download your
+            Maha Kumbh DP.
           </p>
 
           <div className="w-full max-w-[320px] lg:max-w-[420px] aspect-square select-none touch-none">
@@ -267,7 +274,7 @@ export default function FrameMaker() {
               ref={canvasRef}
               width={FRAME_SIZE}
               height={FRAME_SIZE}
-              className={`w-full h-full drop-shadow-[0_10px_35px_rgba(217,164,65,0.4)] ${photo ? "cursor-grab active:cursor-grabbing" : ""}`}
+              className={`w-full h-full drop-shadow-[0_10px_35px_rgba(217,164,65,0.4)] ${photo ? 'cursor-grab active:cursor-grabbing' : ''}`}
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
@@ -278,7 +285,8 @@ export default function FrameMaker() {
 
         <div className="w-full lg:flex-1 lg:pt-2 flex flex-col gap-4">
           <p className="hidden lg:block text-sm text-slate-300/80 -mt-1">
-            Upload your photo, adjust it inside the circle, and download your Maha Kumbh DP.
+            Upload your photo, adjust it inside the circle, and download your
+            Maha Kumbh DP.
           </p>
 
           <label className="flex flex-col gap-1.5">
@@ -293,7 +301,9 @@ export default function FrameMaker() {
           </label>
 
           <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-amber-100/90">Your Photo</span>
+            <span className="text-sm font-medium text-amber-100/90">
+              Your Photo
+            </span>
             <input
               type="file"
               accept="image/*"
@@ -304,7 +314,9 @@ export default function FrameMaker() {
 
           {hasPhoto && (
             <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium text-amber-100/90">Zoom</span>
+              <span className="text-sm font-medium text-amber-100/90">
+                Zoom
+              </span>
               <input
                 type="range"
                 min={1}
@@ -324,7 +336,8 @@ export default function FrameMaker() {
             className="mt-2 w-full rounded-xl bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 text-[#0a1230] font-bold uppercase tracking-wide text-sm py-3.5 shadow-lg shadow-amber-500/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none hover:brightness-110 transition-all"
           >
             <span className="inline-flex items-center gap-2">
-              <span className="opacity-70">✦</span> Download DP <span className="opacity-70">✦</span>
+              <span className="opacity-70">✦</span> Download DP{' '}
+              <span className="opacity-70">✦</span>
             </span>
           </button>
         </div>
